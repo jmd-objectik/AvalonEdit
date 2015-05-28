@@ -971,6 +971,16 @@ namespace ICSharpCode.AvalonEdit.Editing
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
 			base.OnPreviewKeyDown(e);
+
+			if (!e.Handled && e.Key == Key.Space) {
+				// Try to replicate the TextBox control behavior by handling the space key
+				// directly in the PreviewKeyDown event. This has the effect of giving to
+				// our control the priority over a parent which handles the space key
+				// KeyDown event.
+				e.Handled = true;
+				TextCompositionManager.StartComposition(new TextComposition(InputManager.Current, this, " "));
+				return;
+			}
 			
 			if (!e.Handled && e.Key == Key.Insert && this.Options.AllowToggleOverstrikeMode) {
 				this.OverstrikeMode = !this.OverstrikeMode;
